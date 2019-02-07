@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -33,8 +34,16 @@ public class SecondActivity extends Activity implements View.OnClickListener {
     final String LOG_TAG = "myLogs";
 
 
-
     DBHelper dbHelper;
+    // Переменная для управления DB, через методы:
+    // query(),insert(),delete(),update(), execSQL()
+    SQLiteDatabase sqLiteDatabase;
+
+    // Переменная для курсора - временного объекта для хранения записей
+    Cursor cursor;
+
+    // Переменная для адаптера
+    SimpleCursorAdapter simpleCursorAdapter;
 
 
     // Вызывается когда создана впервые активность
@@ -57,43 +66,45 @@ public class SecondActivity extends Activity implements View.OnClickListener {
 
 // создаем объект для создания и управления версиями БД
         dbHelper = new DBHelper(this);
+
+
     }
 
-            @Override
-            public void onClick(View v) {
+    @Override
+    public void onClick(View v) {
 
 
-                // создаем объект для данных Класс ContentValues используется для указания полей таблицы и значений, которые
-                // мы в эти поля будем вставлять. Мы создаем объект cv, и позже его используем. Далее мы записываем в переменные
-                // значения из полей ввода. Затем, с помощью метода getWritableDatabase подключаемся к БД и получаем объект SQLiteDatabase.
-                // Он позволит нам работать с БД. Мы будем использовать его методы insert – вставка записи, query – чтение, delete – удаление.
-                // У них много разных параметров на вход, но мы пока используем самый минимум.
-                ContentValues cv = new ContentValues();
+        // создаем объект для данных Класс ContentValues используется для указания полей таблицы и значений, которые
+        // мы в эти поля будем вставлять. Мы создаем объект cv, и позже его используем. Далее мы записываем в переменные
+        // значения из полей ввода. Затем, с помощью метода getWritableDatabase подключаемся к БД и получаем объект SQLiteDatabase.
+        // Он позволит нам работать с БД. Мы будем использовать его методы insert – вставка записи, query – чтение, delete – удаление.
+        // У них много разных параметров на вход, но мы пока используем самый минимум.
+        ContentValues cv = new ContentValues();
 
-                // получаем данные из полей ввода
-                String data = currentDateTime.getText().toString();
-                String capacity = editZalito.getText().toString();
-                String cost = editCostFuel.getText().toString();
-                String odometr = currentOdometer.getText().toString();
+        // получаем данные из полей ввода
+        String date = currentDateTime.getText().toString();
+        String capacity = editZalito.getText().toString();
+        String cost = editCostFuel.getText().toString();
+        String odometr = currentOdometer.getText().toString();
 
-                // подключаемся к БД
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
+        // подключаемся к БД
+        SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
 
-                switch (v.getId()) {
-                    case R.id.buttonSave:
-                        Log.d(LOG_TAG, "--- Insert in mytable: ---");
+        switch (v.getId()) {
+            case R.id.buttonSave:
+                Log.d(LOG_TAG, "--- Insert in rashod: ---");
 
-                        // подготовим данные для вставки в виде пар: наименование столбца - значение
-                        cv.put("дата", data);
-                        cv.put("заправлено", capacity);
-                        cv.put("стоимость", cost);
-                        cv.put("пробег", odometr);
+                // подготовим данные для вставки в виде пар: наименование столбца - значение
+                cv.put("date", date);
+                cv.put("capacity", capacity);
+                cv.put("cost", cost);
+                cv.put("odometr", odometr);
 
 
-                        // вставляем запись и получаем ее ID
-                        long rowID = db.insert("mytable", null, cv);
-                        Log.d(LOG_TAG, "row inserted, ID = " + rowID);
-                        break;
+                // вставляем запись и получаем ее ID
+                long rowID = sqLiteDatabase.insert("rashod", null, cv);
+                Log.d(LOG_TAG, "row inserted, ID = " + rowID);
+                break;
 ////                case R.id.btnRead:
 ////                    Log.d(LOG_TAG, "--- Rows in mytable: ---");
 //                    // делаем запрос всех данных из таблицы mytable, получаем Cursor
@@ -130,37 +141,12 @@ public class SecondActivity extends Activity implements View.OnClickListener {
 //                    int clearCount = db.delete("mytable", null, null);
 //                    Log.d(LOG_TAG, "deleted rows count = " + clearCount);
 //                    break;
-                }
-                // закрываем подключение к БД
-                db.close();
-
-                class DBHelper extends SQLiteOpenHelper {
-
-                    public DBHelper(Context context) {
-                        // конструктор суперкласса
-                        super(context, "myDB", null, 1);
-                    }
-
-                    @Override
-                    public void onCreate(SQLiteDatabase db) {
-                        Log.d(LOG_TAG, "--- onCreate database ---");
-                        // создаем таблицу с полями
-                        db.execSQL("create table mytable ("
-                                + "id integer primary key autoincrement,"
-                                + "дата text,"
-                                + "пробег text,"
-                                + "залито text,"
-                                + "стоимость text" + ");");
-                    }
-
-                    @Override
-                    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-                    }
-                }
+        }
+        // закрываем подключение к БД
+        sqLiteDatabase.close();
 
 
-            }
+    }
 
 //            @Override
 //           public void onCreate(Bundle savedInstanceState) {
@@ -172,34 +158,35 @@ public class SecondActivity extends Activity implements View.OnClickListener {
 //            }
 
 
-            public void setDate(View v) {
-                new DatePickerDialog(SecondActivity.this, d,
-                        dateAndTime.get(Calendar.YEAR),
-                        dateAndTime.get(Calendar.MONTH),
-                        dateAndTime.get(Calendar.DAY_OF_MONTH))
-                        .show();
+    public void setDate(View v) {
+        new DatePickerDialog(SecondActivity.this, d,
+                dateAndTime.get(Calendar.YEAR),
+                dateAndTime.get(Calendar.MONTH),
+                dateAndTime.get(Calendar.DAY_OF_MONTH))
+                .show();
+    }
+
+    // авто установка текущей даты
+    private void setInitialDateTime() {
+
+        currentDateTime.setText(DateUtils.formatDateTime(this,
+                dateAndTime.getTimeInMillis(),
+                DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR
+        ));
+
+        // установка обработчика выбора даты и вставка в поле для даты
+        DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                dateAndTime.set(Calendar.YEAR, year);
+                dateAndTime.set(Calendar.MONTH, monthOfYear);
+                dateAndTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                currentDateTime.setText(dayOfMonth + monthOfYear + year);
+                setInitialDateTime();
             }
 
-            // авто установка текущей даты
-            private void setInitialDateTime() {
+        };
 
-                currentDateTime.setText(DateUtils.formatDateTime(this,
-                        dateAndTime.getTimeInMillis(),
-                        DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR
-                ));
+    }
 
-                // установка обработчика выбора даты и вставка в поле для даты
-                DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        dateAndTime.set(Calendar.YEAR, year);
-                        dateAndTime.set(Calendar.MONTH, monthOfYear);
-                        dateAndTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                        currentDateTime.setText(dayOfMonth + monthOfYear + year);
-//                setInitialDateTime();
-                    }
+}
 
-                };
-
-            }
-
-        }
