@@ -11,7 +11,7 @@ public class Statistics extends Activity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.statistics);
 
-//jhkjk
+
 
 
     }
