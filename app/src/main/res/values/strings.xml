@@ -1,5 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Fuel-Calc</string>
     <string name="toyota_rush" tools:ignore="ExtraTranslation">Toyota Rush</string>
+    <string name="_286">286</string>
+    <string name="rub">rub</string>
+    <string name="todo">TODO</string>
 
 </resources>

@@ -22,15 +22,18 @@ import java.util.Calendar;
 
 public class SecondActivity extends Activity implements View.OnClickListener {
 
-    TextView currentDateTime;
+    EditText currentDateTime;
     EditText editZalito;
     EditText editCostFuel;
     EditText currentOdometer; //поля для ввода данных
 
     Button buttonSave; //кнопак сохранить введеные данные
+    Button dateButton;
 
     Calendar dateAndTime = Calendar.getInstance();
     private DatePickerDialog.OnDateSetListener d;
+
+
     final String LOG_TAG = "myLogs";
 
 
@@ -54,6 +57,7 @@ public class SecondActivity extends Activity implements View.OnClickListener {
 
         buttonSave = (Button) findViewById(R.id.buttonSave);
         buttonSave.setOnClickListener(this);
+        dateButton = (Button) findViewById(R.id.dateButton);
 
         currentDateTime = (EditText) findViewById(R.id.currentDateTime);
         editZalito = (EditText) findViewById(R.id.editZalito);
@@ -61,7 +65,7 @@ public class SecondActivity extends Activity implements View.OnClickListener {
         currentOdometer = (EditText) findViewById(R.id.currentOdometer);
 
 
-        currentDateTime = (TextView) findViewById(R.id.currentDateTime);
+        currentDateTime = (EditText) findViewById(R.id.currentDateTime);
         setInitialDateTime();
 
 // создаем объект для создания и управления версиями БД
@@ -83,9 +87,11 @@ public class SecondActivity extends Activity implements View.OnClickListener {
 
         // получаем данные из полей ввода
         String date = currentDateTime.getText().toString();
+
         String capacity = editZalito.getText().toString();
         String cost = editCostFuel.getText().toString();
         String odometr = currentOdometer.getText().toString();
+
 
         // подключаемся к БД
         SQLiteDatabase sqLiteDatabase = dbHelper.getWritableDatabase();
@@ -180,7 +186,7 @@ public class SecondActivity extends Activity implements View.OnClickListener {
                 dateAndTime.set(Calendar.YEAR, year);
                 dateAndTime.set(Calendar.MONTH, monthOfYear);
                 dateAndTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                currentDateTime.setText(dayOfMonth + monthOfYear + year);
+
                 setInitialDateTime();
             }
 

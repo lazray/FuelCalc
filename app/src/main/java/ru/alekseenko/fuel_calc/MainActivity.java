@@ -1,30 +1,87 @@
 package ru.alekseenko.fuel_calc;
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
+import android.util.Log;
 import android.view.View;
 import android.app.DatePickerDialog;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
+import android.widget.ListView;
+
+public class MainActivity extends Activity {
+
+        // Метка для журналирования
+        public static final String TAG = "MainActivity";
+
+
+        TextView dateCurrent;
+        TextView mileageCurrent;
 
 
 
 
+        // Переменная для инициализации DB
+        DBHelper dbHelper;
+
+        // Переменная для управления DB, через методы:
+        // query(),insert(),delete(),update(), execSQL()
+        SQLiteDatabase sqLiteDatabase;
+
+        // Переменная для курсора - временного объекта для хранения записей
+        Cursor cursor;
+
+        // Переменная для адаптера
+        SimpleCursorAdapter simpleCursorAdapter;
+    private Object AdapterView;
 
 
-
-    public class MainActivity extends Activity {
-
-
-
-        @Override
+    @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.activity_main);
+        dateCurrent = (TextView) findViewById(R.id.dateCurrent);
+        mileageCurrent = (TextView) findViewById(R.id.dateCurrent);
+
+            //Экземпляр класса базы данных
+            dbHelper = new DBHelper(this);
+            //объект класса для получения доступа к управлению с поддержкой записи данных
+            sqLiteDatabase = dbHelper.getWritableDatabase();
+
+            Log.d(TAG, "dbHelper.getWritableDatabase() has done");
+
+            // Объект Cursor типа MAP-коллекция
+            cursor = sqLiteDatabase.query(DBHelper.rashod,null,null,null,null,null,null);
+
+            // Вывод данных из базы
+            if(cursor.moveToFirst()) {
+                do {
+                    Log.d(TAG, "Cursor = " + cursor.getPosition() + ", ID = " + cursor.getInt(0) + " , " + DBHelper.date + " = " + cursor.getString(1));
+                } while (cursor.moveToNext());
+            }
+//        cursor.close();
+
+            simpleCursorAdapter = new SimpleCursorAdapter(this,
+                    R.layout.activity_main, cursor,
+                    new String[]{DBHelper.date}, new int[]{R.id.dateCurrent},0);
 
 
 
+//                @Override
+//                public void onItemClick;(AdapterView<?> parent, View view, int position, long id) {
+//                    Toast.makeText(MainActivity.this, "position = " + position, Toast.LENGTH_SHORT).show();
+//                    getResources().getString(R.string.app_name);
+//
+//                }
+            }
 
-    }
 
         //Описываем процесс перехода с MainActivity в SecondActivity,
         // который будет происходить при нажатии на нашу кнопку:
@@ -35,7 +92,48 @@ import android.widget.TextView;
             startActivity(intent);
         }
     }
-/*// public class MainActivity extends Activity implements View.OnClickListener {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*// public class MainActivity extends Activity implements View.OnClickListener {
 
     //Объявляем программе о существовании следующих объектов:
     private EditText mE0;
