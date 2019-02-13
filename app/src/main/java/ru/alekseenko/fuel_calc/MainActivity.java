@@ -70,20 +70,18 @@ public class MainActivity extends Activity {
         Log.d(TAG, "dbHelper.getWritableDatabase() has done");
 
         // Объект Cursor типа MAP-коллекция
-        cursor = sqLiteDatabase.query(DBHelper.Rashod, null, null, null, null, null, null);
 
-        // Вывод данных из базы
-        if (cursor.moveToFirst()) {
-            do {
-                Log.d(TAG, "Cursor = " + cursor.getPosition() + ", ID = " + cursor.getInt(0) + " , " + DBHelper.date + " = " + cursor.getString(1));
-            } while (cursor.moveToNext());
+
+        String date = "";
+
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM Rashod", null);
+        cursor.moveToLast();
+        {         date += cursor.getString(1);
+
         }
-//        cursor.close();
+        cursor.close();
 
-        simpleCursorAdapter = new SimpleCursorAdapter(this,
-                R.layout.activity_main, cursor,
-                new String[]{DBHelper.date}, new int[]{R.id.dateCurrent}, 0);
-        dateCurrent.setText(DBHelper.date);
+        dateCurrent.setText(date);
 
 
 
