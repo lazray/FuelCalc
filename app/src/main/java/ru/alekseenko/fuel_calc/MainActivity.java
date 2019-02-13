@@ -9,68 +9,81 @@ import android.view.View;
 import android.app.DatePickerDialog;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 import android.widget.ListView;
+import android.widget.Button;
 
 public class MainActivity extends Activity {
 
-        // Метка для журналирования
-        public static final String TAG = "MainActivity";
+    // Метка для журналирования
+    public static final String TAG = "MainActivity";
 
 
-        TextView dateCurrent;
-        TextView mileageCurrent;
+    TextView dateCurrent;
+    TextView mileageCurrent;
+
+    ImageButton consumptionTotalB;
+    ImageButton statisticsButton4;
 
 
+    // Переменная для инициализации DB
+    DBHelper dbHelper;
 
+    // Переменная для управления DB, через методы:
+    // query(),insert(),delete(),update(), execSQL()
+    SQLiteDatabase sqLiteDatabase;
 
-        // Переменная для инициализации DB
-        DBHelper dbHelper;
+    // Переменная для курсора - временного объекта для хранения записей
+    Cursor cursor;
 
-        // Переменная для управления DB, через методы:
-        // query(),insert(),delete(),update(), execSQL()
-        SQLiteDatabase sqLiteDatabase;
-
-        // Переменная для курсора - временного объекта для хранения записей
-        Cursor cursor;
-
-        // Переменная для адаптера
-        SimpleCursorAdapter simpleCursorAdapter;
+    // Переменная для адаптера
+    SimpleCursorAdapter simpleCursorAdapter;
     private Object AdapterView;
 
 
     @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.activity_main);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
         dateCurrent = (TextView) findViewById(R.id.dateCurrent);
         mileageCurrent = (TextView) findViewById(R.id.dateCurrent);
+        consumptionTotalB = (ImageButton) findViewById(R.id.consumptionTotalB);
+        statisticsButton4 = (ImageButton) findViewById(R.id.statisticsButton4);
 
-            //Экземпляр класса базы данных
-            dbHelper = new DBHelper(this);
-            //объект класса для получения доступа к управлению с поддержкой записи данных
-            sqLiteDatabase = dbHelper.getWritableDatabase();
 
-            Log.d(TAG, "dbHelper.getWritableDatabase() has done");
+//    //Описываем процесс перехода с MainActivity в SecondActivity,
+//    // который будет происходить при нажатии на нашу кнопку:
+//
+//
+//
 
-            // Объект Cursor типа MAP-коллекция
-            cursor = sqLiteDatabase.query(DBHelper.rashod,null,null,null,null,null,null);
+        //Экземпляр класса базы данных
+        dbHelper = new DBHelper(this);
+        //объект класса для получения доступа к управлению с поддержкой записи данных
+        sqLiteDatabase = dbHelper.getWritableDatabase();
 
-            // Вывод данных из базы
-            if(cursor.moveToFirst()) {
-                do {
-                    Log.d(TAG, "Cursor = " + cursor.getPosition() + ", ID = " + cursor.getInt(0) + " , " + DBHelper.date + " = " + cursor.getString(1));
-                } while (cursor.moveToNext());
-            }
+        Log.d(TAG, "dbHelper.getWritableDatabase() has done");
+
+        // Объект Cursor типа MAP-коллекция
+        cursor = sqLiteDatabase.query(DBHelper.Rashod, null, null, null, null, null, null);
+
+        // Вывод данных из базы
+        if (cursor.moveToFirst()) {
+            do {
+                Log.d(TAG, "Cursor = " + cursor.getPosition() + ", ID = " + cursor.getInt(0) + " , " + DBHelper.date + " = " + cursor.getString(1));
+            } while (cursor.moveToNext());
+        }
 //        cursor.close();
 
-            simpleCursorAdapter = new SimpleCursorAdapter(this,
-                    R.layout.activity_main, cursor,
-                    new String[]{DBHelper.date}, new int[]{R.id.dateCurrent},0);
+        simpleCursorAdapter = new SimpleCursorAdapter(this,
+                R.layout.activity_main, cursor,
+                new String[]{DBHelper.date}, new int[]{R.id.dateCurrent}, 0);
+        dateCurrent.setText(DBHelper.date);
 
 
 
@@ -79,19 +92,45 @@ public class MainActivity extends Activity {
 //                    Toast.makeText(MainActivity.this, "position = " + position, Toast.LENGTH_SHORT).show();
 //                    getResources().getString(R.string.app_name);
 //
-//                }
-            }
+////                }
+    }
 
 
-        //Описываем процесс перехода с MainActivity в SecondActivity,
-        // который будет происходить при нажатии на нашу кнопку:
-        public void Click(View view) {
-            //Создаем переход:
-            Intent intent=new Intent(MainActivity.this,SecondActivity.class);
-            //Запускаем его при нажатии:
-            startActivity(intent);
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.consumptionTotalB:
+                // Вызов ввода данных активити
+                Intent intent = new Intent(this, SecondActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.statisticsButton4:
+                // Вызов статистики активити
+                Intent intent2 = new Intent(this, Statistics.class);
+                startActivity(intent2);
+                break;
+            default:
+                break;
+
         }
     }
+}
+//        Альтернативный метод встваки данных в поле TextView
+//
+// String date = "";
+//
+//        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM Rashod", null);
+//        cursor.moveToFirst();
+//        while (!cursor.isAfterLast()) {
+//            date += cursor.getString(1) + " | ";
+//            cursor.moveToNext();
+//        }
+//        cursor.close();
+//
+//        dateCurrent.setText(date);
+//    }}
+
+
+
 
 
 

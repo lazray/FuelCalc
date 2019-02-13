@@ -8,11 +8,11 @@
     tools:context=".MainActivity">
 
     <ImageButton
-        android:id="@+id/consumption_totalB"
+        android:id="@+id/consumptionTotalB"
         android:layout_width="88dp"
         android:layout_height="79dp"
         android:background="@drawable/ic_local_gas_station"
-        android:onClick="Click"
+        android:onClick="onClick"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.537"
@@ -27,7 +27,7 @@
         android:layout_width="87dp"
         android:layout_height="79dp"
         android:background="@drawable/ic_grid_on"
-        android:onClick="Click"
+        android:onClick="onClick"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.855"

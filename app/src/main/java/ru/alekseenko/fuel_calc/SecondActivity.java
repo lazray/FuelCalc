@@ -58,13 +58,9 @@ public class SecondActivity extends Activity implements View.OnClickListener {
         buttonSave = (Button) findViewById(R.id.buttonSave);
         buttonSave.setOnClickListener(this);
         dateButton = (Button) findViewById(R.id.dateButton);
-
-        currentDateTime = (EditText) findViewById(R.id.currentDateTime);
         editZalito = (EditText) findViewById(R.id.editZalito);
         editCostFuel = (EditText) findViewById(R.id.editCostFuel);
         currentOdometer = (EditText) findViewById(R.id.currentOdometer);
-
-
         currentDateTime = (EditText) findViewById(R.id.currentDateTime);
         setInitialDateTime();
 
@@ -98,7 +94,7 @@ public class SecondActivity extends Activity implements View.OnClickListener {
 
         switch (v.getId()) {
             case R.id.buttonSave:
-                Log.d(LOG_TAG, "--- Insert in rashod: ---");
+                Log.d(LOG_TAG, "--- Insert in Rashod: ---");
 
                 // подготовим данные для вставки в виде пар: наименование столбца - значение
                 cv.put("date", date);
@@ -108,13 +104,13 @@ public class SecondActivity extends Activity implements View.OnClickListener {
 
 
                 // вставляем запись и получаем ее ID
-                long rowID = sqLiteDatabase.insert("rashod", null, cv);
+                long rowID = sqLiteDatabase.insert("Rashod", null, cv);
                 Log.d(LOG_TAG, "row inserted, ID = " + rowID);
                 break;
 ////                case R.id.btnRead:
-////                    Log.d(LOG_TAG, "--- Rows in mytable: ---");
-//                    // делаем запрос всех данных из таблицы mytable, получаем Cursor
-//                    // Cursor c = db.query("mytable", null, null, null, null, null, null);
+////                    Log.d(LOG_TAG, "--- Rows in Rashod: ---");
+//                    // делаем запрос всех данных из таблицы Rashod, получаем Cursor
+//                    // Cursor c = db.query("Rashod", null, null, null, null, null, null);
 //
 //                    // ставим позицию курсора на первую строку выборки
 //                    // если в выборке нет строк, вернется false
@@ -142,12 +138,15 @@ public class SecondActivity extends Activity implements View.OnClickListener {
 //                    c.close();
 //                    break;
 //                case R.id.btnClear:
-//                    Log.d(LOG_TAG, "--- Clear mytable: ---");
+//                    Log.d(LOG_TAG, "--- Clear Rashod: ---");
 //                    // удаляем все записи
-//                    int clearCount = db.delete("mytable", null, null);
+//                    int clearCount = db.delete("Rashod", null, null);
 //                    Log.d(LOG_TAG, "deleted rows count = " + clearCount);
 //                    break;
         }
+
+
+
         // закрываем подключение к БД
         sqLiteDatabase.close();
 
@@ -186,8 +185,7 @@ public class SecondActivity extends Activity implements View.OnClickListener {
                 dateAndTime.set(Calendar.YEAR, year);
                 dateAndTime.set(Calendar.MONTH, monthOfYear);
                 dateAndTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-                setInitialDateTime();
+//                setInitialDateTime();
             }
 
         };
